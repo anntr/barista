@@ -377,4 +377,17 @@ export class DtRadialChart implements AfterContentInit, OnDestroy {
       series.origin.selectedChange.emit(series.origin.selected);
     }
   }
+
+  /** @internal Toggle the visibility of an element */
+  _toggleLegend(slice: DtRadialChartRenderData): void {
+    // don't allow hiding last element
+    if (
+      this._renderData.filter((node) => node.origin.active).length > 1 ||
+      !slice.origin.active
+    ) {
+      slice.origin.active = !slice.origin.active;
+
+      this._updateRenderData();
+    }
+  }
 }
