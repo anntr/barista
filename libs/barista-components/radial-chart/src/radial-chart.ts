@@ -380,9 +380,10 @@ export class DtRadialChart implements AfterContentInit, OnDestroy {
 
   /** @internal Toggle the visibility of an element */
   _toggleLegend(slice: DtRadialChartRenderData): void {
-    // don't allow hiding last element
     if (
+      // Keep at least one element visible at any time
       this._renderData.filter((node) => node.origin.active).length > 1 ||
+      // If all but one are inactive, allow the clicked one to be activated again
       !slice.origin.active
     ) {
       slice.origin.active = !slice.origin.active;
