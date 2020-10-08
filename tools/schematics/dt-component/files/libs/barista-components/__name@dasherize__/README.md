@@ -1,0 +1,2 @@
+# <%= camelize(name) %>
+Generated ReadMe.
