@@ -20,3 +20,12 @@ stylelint(
     name = "stylelint",
     srcs = glob(["**/*.scss"]),
 )
+
+ts_config(
+    name = "tsconfig_lib",
+    src = "tsconfig.lib.json",
+    deps = [
+        "tsconfig.json",
+        "//libs/barista-components:tsconfig",
+    ],
+)
