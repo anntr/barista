@@ -30,10 +30,52 @@ import {
 import { formatFiles } from '@nrwl/workspace';
 import { commitChanges, InsertChange } from '../utils/change';
 
+function generateBazelFileContent(schema: any): string {
+  // BUILD.bazel file has to be generated this way, and not via a template,
+  // in order to not get picked up by bazel
+  return `load("//tools/bazel_rules:index.bzl", "stylelint")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+  name = "${schema.name}",
+  srcs = glob(
+      include = ["**/*.ts"],
+      exclude = [
+          "**/*.spec.ts",
+          "src/test-setup.ts",
+      ],
+  ) + glob([
+      "**/*.html",
+      "**/*.scss",
+  ]),
+)
+
+stylelint(
+  name = "stylelint",
+  srcs = glob(["**/*.scss"]),
+)
+
+ts_config(
+  name = "tsconfig_lib",
+  src = "tsconfig.lib.json",
+  deps = [
+      "tsconfig.json",
+      "//libs/barista-components:tsconfig",
+  ],
+)
+`;
+}
+
 export function modifyBazelConfig(schema): Rule {
   return (host: Tree) => {
     const configPath = join('libs', 'barista-components', 'config.bzl');
     const sourceFile = getSourceFile(host, configPath);
+
+    host.create(
+      `libs/barista-components/${strings.dasherize(schema.name)}/BUILD.bazel`,
+      generateBazelFileContent(schema),
+    );
 
     const componentsDeclaration = findNodes(
       sourceFile,
