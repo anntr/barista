@@ -25,8 +25,8 @@ import {
   changeOrderButton,
 } from './table.po';
 
-fixture('Table Order')
-  .page('http://localhost:4200/table-order')
+fixture('Table')
+  .page('http://localhost:4200/table')
   .beforeEach(async () => {
     await resetWindowSizeToDefault();
     await waitForAngular();
